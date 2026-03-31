@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: converter-backend
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=3600s
+    cache-names:
+      - rates
+
+swop:
+  api:
+    base-url: ${SWOP_API_BASE_URL:https://swop.cx/rest}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      influx:
+        enabled: ${INFLUX_ENABLED:true}
+        uri: ${MANAGEMENT_METRICS_EXPORT_INFLUX_URI:http://localhost:8086}
+        bucket: ${INFLUX_BUCKET:metrics}
+        org: ${INFLUX_ORG:converter}
+        token: ${INFLUX_TOKEN:default-token}
+        step: 10s
+        compressed: true
+        auto-create-db: true
+    tags:
+      application: ${spring.application.name}
+      environment: ${ENVIRONMENT:development}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.converter: ${LOGGING_LEVEL_COM_CONVERTER:DEBUG}

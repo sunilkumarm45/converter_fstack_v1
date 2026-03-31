@@ -1,0 +1,12 @@
+type Query {
+    convert(sourceCurrency: String!, targetCurrency: String!, amount: Float!): ConversionResult!
+    currencies: [String!]!
+}
+
+type ConversionResult {
+    sourceCurrency: String!
+    targetCurrency: String!
+    originalAmount: Float!
+    convertedAmount: Float!
+    exchangeRate: Float!
+}

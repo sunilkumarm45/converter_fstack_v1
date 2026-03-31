@@ -1,0 +1,101 @@
+# Docker Compose configuration for PRODUCTION environment
+# Usage: docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+
+services:
+  influxdb:
+    image: influxdb:2.0
+    ports: ["8086:8086"]
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=${DOCKER_INFLUXDB_INIT_MODE:-setup}
+      - DOCKER_INFLUXDB_INIT_USERNAME=${DOCKER_INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${DOCKER_INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${DOCKER_INFLUXDB_INIT_ORG:-converter-prod}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUX_BUCKET:-metrics-prod}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUX_TOKEN}
+    volumes:
+      - influxdb-prod-data:/var/lib/influxdb2
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    networks:
+      - converter-prod
+
+  grafana:
+    image: grafana/grafana:latest
+    ports: ["3000:3000"]
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS:-}
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/dashboard.json
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/
+      - GF_SECURITY_ADMIN_PASSWORD__FILE=
+    volumes:
+      - grafana-prod-data:/var/lib/grafana
+      - ./monitoring/grafana-datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./monitoring/grafana-dashboard.json:/var/lib/grafana/dashboards/dashboard.json
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - converter-prod
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports: ["8080:8080"]
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
+      - SWOP_API_KEY=${SWOP_API_KEY}
+      - SWOP_API_BASE_URL=${SWOP_API_BASE_URL:-https://swop.cx/rest}
+      - MANAGEMENT_METRICS_EXPORT_INFLUX_URI=${MANAGEMENT_METRICS_EXPORT_INFLUX_URI:-http://influxdb:8086}
+      - INFLUX_BUCKET=${INFLUX_BUCKET:-metrics-prod}
+      - INFLUX_ORG=${INFLUX_ORG:-converter-prod}
+      - INFLUX_TOKEN=${INFLUX_TOKEN}
+      - INFLUX_ENABLED=${INFLUX_ENABLED:-true}
+      - LOGGING_LEVEL_ROOT=${LOGGING_LEVEL_ROOT:-WARN}
+      - LOGGING_LEVEL_COM_CONVERTER=${LOGGING_LEVEL_COM_CONVERTER:-INFO}
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - converter-prod
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_GRAPHQL_URL=${VITE_GRAPHQL_URL:-/graphql}
+    ports: ["80:80"]
+    environment:
+      - VITE_GRAPHQL_URL=${VITE_GRAPHQL_URL:-/graphql}
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - converter-prod
+
+networks:
+  converter-prod:
+    driver: bridge
+
+volumes:
+  influxdb-prod-data:
+  grafana-prod-data:
+

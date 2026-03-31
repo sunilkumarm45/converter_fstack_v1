@@ -1,0 +1,30 @@
+# Development Profile Configuration
+spring:
+  cache:
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=600s  # Shorter cache for development
+
+swop:
+  api:
+    timeout: 10s
+    retry:
+      max-attempts: 2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Expose all endpoints in dev for debugging
+  metrics:
+    export:
+      influx:
+        step: 5s  # More frequent metrics in dev
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.converter: ${LOGGING_LEVEL_COM_CONVERTER:DEBUG}
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+

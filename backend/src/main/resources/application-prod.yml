@@ -1,0 +1,30 @@
+# Production Profile Configuration
+spring:
+  cache:
+    caffeine:
+      spec: maximumSize=2000,expireAfterWrite=7200s  # Larger, longer cache for production
+
+swop:
+  api:
+    timeout: 15s
+    retry:
+      max-attempts: 3
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus  # Limited endpoints in prod
+  metrics:
+    export:
+      influx:
+        step: 30s  # Less frequent metrics in prod
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:WARN}
+    com.converter: ${LOGGING_LEVEL_COM_CONVERTER:INFO}
+    org.springframework.web: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
