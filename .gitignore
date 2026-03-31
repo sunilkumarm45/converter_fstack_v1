@@ -1,0 +1,178 @@
+# Java/Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*.ctxt
+.mtj.tmp/
+*.nar
+hs_err_pid*
+replay_pid*
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Node.js/npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+dist/
+dist-ssr/
+*.local
+
+# Frontend build artifacts
+frontend/dist/
+frontend/node_modules/
+frontend/.vite/
+
+# Environment files with actual secrets (DO NOT COMMIT)
+.env
+.env.local
+
+# Allow environment templates to be committed
+!.env.dev
+!.env.prod
+!.env.local.example
+!.env.example
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - Eclipse
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+.loadpath
+.recommenders
+
+# IDE - NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+*.dockerignore
+
+# Docker volumes data (if stored locally)
+influxdb-data/
+grafana-data/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+.grunt
+.lock-wscript
+lib-cov
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.tmp/
+temp/
+
+# Build artifacts
+build/
+*.pid
+*.seed
+*.pid.lock
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# API keys and secrets (additional protection)
+*secret*
+*secrets*
+*.pem
+*.key
+!**/.gitkeep
+
