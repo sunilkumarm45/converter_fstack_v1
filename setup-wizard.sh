@@ -4,7 +4,7 @@
 
 set -e
 
-REPO_ROOT="/Users/a1245991/Workspace/converter_fstack_v1"
+REPO_ROOT="../converter_fstack_v1"
 cd "$REPO_ROOT"
 
 echo "🎯 Converter Full-Stack - First Time Setup"
