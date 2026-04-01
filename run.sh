@@ -1,9 +1,9 @@
 #!/bin/zsh
 set -e
 
-export JAVA_HOME="/Users/a1245991/Downloads/amazon-corretto-21.jdk/Contents/Home"
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 export PATH="$JAVA_HOME/bin:$PATH"
-REPO_ROOT="/Users/a1245991/Workspace/converter_fstack_v1"
+REPO_ROOT="../converter_fstack_v1"
 
 echo "🚀 Starting Converter Full-Stack Application"
 echo "==========================================="

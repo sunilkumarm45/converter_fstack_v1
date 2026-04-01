@@ -1,15 +1,17 @@
 #!/bin/zsh
 # Enhanced run script with environment support
-# Usage: ./run.sh [dev|prod|local]
+# Usage: ./run-env.sh [dev|prod|local] [SWOP_API_KEY]
+# Example: ./run-env.sh dev your_api_key_here
 
 set -e
 
-export JAVA_HOME="/Users/a1245991/Downloads/amazon-corretto-21.jdk/Contents/Home"
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 export PATH="$JAVA_HOME/bin:$PATH"
-REPO_ROOT="/Users/a1245991/Workspace/converter_fstack_v1"
+REPO_ROOT="../converter_fstack_v1"
 
 # Determine environment (default to dev)
 ENV=${1:-dev}
+SWOP_API_KEY_ARG=${2:-}
 
 echo "🚀 Starting Converter Full-Stack Application"
 echo "==========================================="
@@ -45,11 +47,20 @@ case "$ENV" in
     ;;
 esac
 
+# Override SWOP_API_KEY if provided via command line
+if [ -n "$SWOP_API_KEY_ARG" ]; then
+  echo "🔑 Using SWOP_API_KEY from command line argument"
+  export SWOP_API_KEY="$SWOP_API_KEY_ARG"
+fi
+
 # Check for SWOP_API_KEY
 if [ -z "$SWOP_API_KEY" ]; then
   echo "⚠️  Warning: SWOP_API_KEY is not set"
   echo "   The application will fail when attempting currency conversions"
   echo "   Get your API key from https://swop.cx and set it in .env.$ENV"
+  echo ""
+  echo "   Or provide the API key as an argument:"
+  echo "   ./run-env.sh $ENV YOUR_API_KEY"
   echo ""
 fi
 

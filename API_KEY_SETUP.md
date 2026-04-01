@@ -22,7 +22,7 @@ export SWOP_API_KEY="your-api-key-here"
 
 ```bash
 cd backend
-export JAVA_HOME=/Users/a1245991/Downloads/amazon-corretto-21.jdk/Contents/Home
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 mvn spring-boot:run -DskipTests
 ```
 
@@ -77,7 +77,7 @@ You should see a valid response with exchange rates.
 Make sure JAVA_HOME is set:
 
 ```bash
-export JAVA_HOME=/Users/a1245991/Downloads/amazon-corretto-21.jdk/Contents/Home
+export JAVA_HOME=$(/usr/libexec/java_home -v 21)
 export PATH="$JAVA_HOME/bin:$PATH"
 ```
 
